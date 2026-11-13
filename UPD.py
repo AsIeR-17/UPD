@@ -3,7 +3,6 @@ import subprocess
 import shutil
 import sys
 
-
 hubo_error = False
 GESTORES = {
     "winget": {
@@ -12,7 +11,7 @@ GESTORES = {
         "update_all": [["winget", "upgrade", "--all"]],
         "update_one": ["winget", "upgrade", "--id", "{name}", "--exact"],
         "check_installed": None,
-        "existencia": None
+        "existencia": None,
     },
     "scoop": {
         "executable": "scoop",
@@ -20,7 +19,7 @@ GESTORES = {
         "update_all": [["scoop", "update"], ["scoop", "update", "*"]],
         "update_one": ["scoop", "update", "{name}"],
         "check_installed": None,
-        "existencia": None
+        "existencia": None,
     },
     "pip": {
         "executable": sys.executable,
@@ -28,10 +27,9 @@ GESTORES = {
         "update_all": None,
         "update_one": ["python", "-m", "pip", "install", "-U", "{name}"],
         "check_installed": ["python", "-m", "pip", "show", "{name}"],
-        "existencia": ["python", "-m", "pip", "--version"]
-    }
+        "existencia": ["python", "-m", "pip", "--version"],
+    },
 }
-
 
 
 def disponibilidad():
@@ -49,8 +47,6 @@ def disponibilidad():
     return disponibles
 
 
-
-
 def sustituir(comando, nombre):
     resultado = []
     for palabra in comando:
@@ -58,19 +54,20 @@ def sustituir(comando, nombre):
             resultado.append(nombre)
         else:
             resultado.append(palabra)
-    return(resultado)
-
-
-
+    return resultado
 
 
 def ejecutar(gestor, nombres):
     datos = GESTORES[gestor]
     ruta = shutil.which(datos["executable"])
     if nombres is None:
-        resultado = subprocess.run([ruta] + datos["list"][1:], capture_output=True, text=True, encoding="utf-8")
+        resultado = subprocess.run(
+            [ruta] + datos["list"][1:], capture_output=True, text=True, encoding="utf-8"
+        )
         if resultado.returncode != 0:
-            print(f"{gestor}: failed (exit code {resultado.returncode})", file=sys.stderr)
+            print(
+                f"{gestor}: failed (exit code {resultado.returncode})", file=sys.stderr
+            )
             print(resultado.stderr, file=sys.stderr)
         elif resultado.stdout.strip() == "":
             print(f"{gestor}: everything is up to date")
@@ -90,15 +87,18 @@ def ejecutar(gestor, nombres):
             else:
                 comando = sustituir(datos["check_installed"], nombre)
                 comprobacion = subprocess.run([ruta] + comando[1:], capture_output=True)
-                if comprobacion.returncode == 0: 
+                if comprobacion.returncode == 0:
                     comando = sustituir(datos["update_one"], nombre)
                     subprocess.run([ruta] + comando[1:])
                 else:
                     print(f"{nombre} is not installed")
 
+
 parser = argparse.ArgumentParser(
     description="Manage package managers",
-    formatter_class=lambda prog: argparse.RawDescriptionHelpFormatter(prog, max_help_position=30),
+    formatter_class=lambda prog: argparse.RawDescriptionHelpFormatter(
+        prog, max_help_position=30
+    ),
     prog="upd",
     epilog="""\
     Examples:
@@ -112,11 +112,29 @@ parser = argparse.ArgumentParser(
     ██║   ██║██╔═══╝ ██║  ██║
     ╚██████╔╝██║     ██████╔╝
      ╚═════╝ ╚═╝     ╚═════╝ 
-    """
+    """,
 )
-parser.add_argument("-w", "--winget", dest="w", nargs="*", default=None, help="Winget packages", metavar="ID")
-parser.add_argument("-s", "--scoop", dest="s" ,nargs="*", default=None, help="Scoop packages", metavar="ID")
-parser.add_argument("-p", "--pip", dest="p" ,nargs="*", default=None, help="Pip packages", metavar="ID")
+parser.add_argument(
+    "-w",
+    "--winget",
+    dest="w",
+    nargs="*",
+    default=None,
+    help="Winget packages",
+    metavar="ID",
+)
+parser.add_argument(
+    "-s",
+    "--scoop",
+    dest="s",
+    nargs="*",
+    default=None,
+    help="Scoop packages",
+    metavar="ID",
+)
+parser.add_argument(
+    "-p", "--pip", dest="p", nargs="*", default=None, help="Pip packages", metavar="ID"
+)
 parser.add_argument("-a", "--all", action="store_true", help="All managers")
 args = parser.parse_args()
 
@@ -172,4 +190,3 @@ else:
 
 if hubo_error == True:
     sys.exit(1)
-
