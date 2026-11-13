@@ -8,6 +8,12 @@ Supported managers: winget, scoop and pip.
 
 Tools like topgrade or UniGetUI update things for you. upd takes the opposite approach: it shows you what is outdated first, and you decide what to update.
 
+## List of supported managers
+
+- Winget
+- Scoop
+- Pip
+
 ## Requirements
 
 - Windows
