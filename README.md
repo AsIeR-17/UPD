@@ -2,7 +2,6 @@
 
 A small Windows update checker for package managers. By default it only **lists** what is outdated and never updates anything unless you ask.
 
-Supported managers: winget, scoop and pip.
 
 ## Why upd?
 
