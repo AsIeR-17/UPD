@@ -34,7 +34,10 @@ upd -w Git.Git      Update one winget package
 upd -a              Update all managers
 ```
 
-Use `-s` for scoop and `-p` for pip. Pip has no "update all", so it needs package names.
+- `-w` | winget
+- `-s` | scoop 
+- `-p` | pip
+- `-c` | chocolatey
 
 ## Known issues
 
