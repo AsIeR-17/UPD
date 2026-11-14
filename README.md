@@ -12,7 +12,8 @@ Tools like topgrade or UniGetUI update things for you. upd takes the opposite ap
 - Winget
 - Scoop
 - Pip
-- Chocolatey (Experimental)
+- Chocolatey (Untested)
+- Npm
 
 ## Requirements
 
@@ -37,6 +38,7 @@ upd -a              Update all managers
 - `-s` | scoop 
 - `-p` | pip
 - `-c` | chocolatey
+- `-n` | npm
 
 ## Known issues
 

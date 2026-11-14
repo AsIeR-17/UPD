@@ -37,6 +37,15 @@ GESTORES = {
         "check_installed": None,
         "existencia": None,
     },
+    "npm": {
+        "executable": "npm",
+        "list": ["npm", "outdated", "-g"],
+        "update_all": [["npm", "update", "-g"]],
+        "update_one": ["npm", "update", "-g", "{name}"],
+        "check_installed": None,
+        "existencia": None,
+        "ok_codes": [0, 1],
+    },
 }
 
 
@@ -72,7 +81,7 @@ def ejecutar(gestor, nombres):
         resultado = subprocess.run(
             [ruta] + datos["list"][1:], capture_output=True, text=True, encoding="utf-8"
         )
-        if resultado.returncode != 0:
+        if resultado.returncode not in datos.get("ok_codes", [0]):
             print(
                 f"{gestor}: failed (exit code {resultado.returncode})", file=sys.stderr
             )
@@ -152,6 +161,15 @@ parser.add_argument(
     help="Chocolatey packages",
     metavar="ID",
 )
+parser.add_argument(
+    "-n",
+    "--npm",
+    dest="n",
+    nargs="*",
+    default=None,
+    help="npm global packages",
+    metavar="ID",
+)
 parser.add_argument("-a", "--all", action="store_true", help="All managers")
 args = parser.parse_args()
 
@@ -161,7 +179,13 @@ if not disponibles:
     print("No package managers were found", file=sys.stderr)
     sys.exit(1)
 
-banderas = {"winget": args.w, "scoop": args.s, "pip": args.p, "choco": args.c}
+banderas = {
+    "winget": args.w,
+    "scoop": args.s,
+    "pip": args.p,
+    "choco": args.c,
+    "npm": args.n,
+}
 
 if args.all:
     for gestor in disponibles:
