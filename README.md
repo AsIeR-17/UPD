@@ -1,3 +1,11 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo_dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/logo_light.png">
+    <img src="assets/logo-light.png" alt="Logo de upd" width="400">
+  </picture>
+</p>
+
 # upd
 
 A small Windows update checker for package managers. By default it only **lists** what is outdated and never updates anything unless you ask.
