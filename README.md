@@ -18,7 +18,6 @@ Tools like topgrade or UniGetUI update things for you. upd takes the opposite ap
 
 - Windows
 - Python 3
-- At least one of: winget, scoop, pip
 
 ## Installation
 

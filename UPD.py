@@ -29,6 +29,14 @@ GESTORES = {
         "check_installed": ["python", "-m", "pip", "show", "{name}"],
         "existencia": ["python", "-m", "pip", "--version"],
     },
+    "choco": {
+        "executable": "choco",
+        "list": ["choco", "outdated"],
+        "update_all": [["choco", "upgrade", "all", "-y"]],
+        "update_one": ["choco", "upgrade", "{name}", "-y", "--fail-on-not-installed"],
+        "check_installed": None,
+        "existencia": None,
+    },
 }
 
 
@@ -135,6 +143,15 @@ parser.add_argument(
 parser.add_argument(
     "-p", "--pip", dest="p", nargs="*", default=None, help="Pip packages", metavar="ID"
 )
+parser.add_argument(
+    "-c",
+    "--choco",
+    dest="c",
+    nargs="*",
+    default=None,
+    help="Chocolatey packages",
+    metavar="ID",
+)
 parser.add_argument("-a", "--all", action="store_true", help="All managers")
 args = parser.parse_args()
 
@@ -144,49 +161,26 @@ if not disponibles:
     print("No package managers were found", file=sys.stderr)
     sys.exit(1)
 
+banderas = {"winget": args.w, "scoop": args.s, "pip": args.p, "choco": args.c}
+
 if args.all:
-    if "winget" in disponibles:
-        print("===== WINGET =====")
-        ejecutar("winget", [])
+    for gestor in disponibles:
+        print(f"===== {gestor.upper()} =====")
+        ejecutar(gestor, [])
         print(" ")
-    if "scoop" in disponibles:
-        print("===== SCOOP =====")
-        ejecutar("scoop", [])
+elif all(valor is None for valor in banderas.values()):
+    for gestor in disponibles:
+        print(f"===== {gestor.upper()} =====")
+        ejecutar(gestor, None)
         print(" ")
-    if "pip" in disponibles:
-        print("====== PIP ======")
-        ejecutar("pip", [])
-elif args.w is None and args.s is None and args.p is None:
-    if "winget" in disponibles:
-        print("===== WINGET =====")
-        ejecutar("winget", None)
-        print(" ")
-    if "scoop" in disponibles:
-        print("===== SCOOP =====")
-        ejecutar("scoop", None)
-        print(" ")
-    if "pip" in disponibles:
-        print("====== PIP ======")
-        ejecutar("pip", None)
 else:
-    if args.w is not None:
-        if "winget" in disponibles:
-            ejecutar("winget", args.w)
-        else:
-            print("Winget not found in PATH", file=sys.stderr)
-            hubo_error = True
-    if args.s is not None:
-        if "scoop" in disponibles:
-            ejecutar("scoop", args.s)
-        else:
-            print("Scoop not found in PATH", file=sys.stderr)
-            hubo_error = True
-    if args.p is not None:
-        if "pip" in disponibles:
-            ejecutar("pip", args.p)
-        else:
-            print("Pip is not available for this Python", file=sys.stderr)
-            hubo_error = True
+    for gestor, nombres in banderas.items():
+        if nombres is not None:
+            if gestor in disponibles:
+                ejecutar(gestor, nombres)
+            else:
+                print(f"{gestor} not found", file=sys.stderr)
+                hubo_error = True
 
 if hubo_error == True:
     sys.exit(1)
