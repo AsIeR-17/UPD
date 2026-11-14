@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo_dark.png" alt="Logo de upd" width="450">
+  <img src="assets/logo-dark.svg" alt="Logo de upd" width="450">
 </p>
 
 # upd
