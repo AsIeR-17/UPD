@@ -13,6 +13,7 @@ Tools like topgrade or UniGetUI update things for you. upd takes the opposite ap
 - Winget
 - Scoop
 - Pip
+- Chocolatey
 
 ## Requirements
 
