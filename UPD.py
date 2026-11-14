@@ -3,7 +3,6 @@ import subprocess
 import shutil
 import sys
 
-hubo_error = False
 GESTORES = {
     "winget": {
         "executable": "winget",
@@ -171,40 +170,49 @@ parser.add_argument(
     metavar="ID",
 )
 parser.add_argument("-a", "--all", action="store_true", help="All managers")
-args = parser.parse_args()
 
-disponibles = disponibilidad()
 
-if not disponibles:
-    print("No package managers were found", file=sys.stderr)
-    sys.exit(1)
+def main():
+    args = parser.parse_args()
 
-banderas = {
-    "winget": args.w,
-    "scoop": args.s,
-    "pip": args.p,
-    "choco": args.c,
-    "npm": args.n,
-}
+    hubo_error = False
 
-if args.all:
-    for gestor in disponibles:
-        print(f"===== {gestor.upper()} =====")
-        ejecutar(gestor, [])
-        print(" ")
-elif all(valor is None for valor in banderas.values()):
-    for gestor in disponibles:
-        print(f"===== {gestor.upper()} =====")
-        ejecutar(gestor, None)
-        print(" ")
-else:
-    for gestor, nombres in banderas.items():
-        if nombres is not None:
-            if gestor in disponibles:
-                ejecutar(gestor, nombres)
-            else:
-                print(f"{gestor} not found", file=sys.stderr)
-                hubo_error = True
+    disponibles = disponibilidad()
 
-if hubo_error == True:
-    sys.exit(1)
+    if not disponibles:
+        print("No package managers were found", file=sys.stderr)
+        sys.exit(1)
+
+    banderas = {
+        "winget": args.w,
+        "scoop": args.s,
+        "pip": args.p,
+        "choco": args.c,
+        "npm": args.n,
+    }
+
+    if args.all:
+        for gestor in disponibles:
+            print(f"===== {gestor.upper()} =====")
+            ejecutar(gestor, [])
+            print(" ")
+    elif all(valor is None for valor in banderas.values()):
+        for gestor in disponibles:
+            print(f"===== {gestor.upper()} =====")
+            ejecutar(gestor, None)
+            print(" ")
+    else:
+        for gestor, nombres in banderas.items():
+            if nombres is not None:
+                if gestor in disponibles:
+                    ejecutar(gestor, nombres)
+                else:
+                    print(f"{gestor} not found", file=sys.stderr)
+                    hubo_error = True
+
+    if hubo_error == True:
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
