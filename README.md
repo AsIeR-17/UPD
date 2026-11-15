@@ -2,14 +2,16 @@
   <img src="assets/logo-dark.svg" alt="Logo de upd" width="450">
 </p>
 
-# upd
+# UPD
 
-A small Windows update checker for package managers. By default it only **lists** what is outdated and never updates anything unless you ask.
+Built for people who use varius package managers, this program unites all of them in one easy to use CLI tool.
+By default calling it show you automatically every package manager you have and its outdates packages. Letting you update everything at your convenience
 
 
 ## Why upd?
 
-Tools like topgrade or UniGetUI update things for you. upd takes the opposite approach: it shows you what is outdated first, and you decide what to update.
+Tools like topgrade or UniGetUI update things for you. 
+UPD starts by showing you what's outdated by letting you choose in case you don't want to update something
 
 ## List of supported managers
 
