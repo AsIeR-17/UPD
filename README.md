@@ -26,11 +26,10 @@ UPD starts by showing you what's outdated by letting you choose in case you don'
 - Windows
 - Python 3
 
-## Installation
-
-1. Clone or download this repository.
-2. Add the folder to your PATH, so the `upd` command works anywhere.
-
+## Instalación
+```
+pip install git+https://github.com/AsIeR-17/UPD.git
+```
 ## Usage
 
 ```
