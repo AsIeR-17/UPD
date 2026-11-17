@@ -52,6 +52,7 @@ upd -a              Update all managers
 ## Future
 
 - Working on adding much more managers 
+- Testing and adding Linux and Mac compatability
 
 ## License
 
