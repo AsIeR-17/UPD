@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "upd-tool"
+version = "0.2.0"
+requires-python = ">=3.10"
+dependencies = []
+authors = [{ name = "AsIeR-17" }]
+description = "CLI tool to control all your package managers"
+readme = "README.md"
+license = "MIT"
+keywords = ["package managers", "package manager"]
+
+[project.urls]
+Repository = "https://github.com/AsIeR-17/UPD"
+Issues = "https://github.com/AsIeR-17/UPD/issues"
+
+[project.scripts]
+upd = "UPD:main"
+
+[tool.setuptools]
+py-modules = ["UPD"]
