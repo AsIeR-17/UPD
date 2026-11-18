@@ -24,7 +24,7 @@ UPD starts by showing you what's outdated by letting you choose in case you don'
 ## Requirements
 
 - Windows
-- Python 3
+- Python 3.10 or greater
 
 ## Instalación
 ```
