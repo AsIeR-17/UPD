@@ -45,21 +45,28 @@ GESTORES = {
         "existencia": None,
         "ok_codes": [0, 1],
     },
+    "cargo": {
+        "executable": "cargo",
+        "list": ["cargo", "install-update", "-l"],
+        "update_all": [["cargo", "install-update", "-a"]],
+        "update_one": ["cargo", "install-update", "{name}"],
+        "check_installed": None,
+        "existencia": ["cargo", "install-update", "--version"],
+        "hint": "cargo-update is required: cargo install cargo-update",
+    },
 }
-
+# Queda testear CARGO, primero instalarlo y testear
 
 def disponibilidad():
     disponibles = []
-    for gestor in GESTORES:
-        datos = GESTORES[gestor]
-        if datos["existencia"] is None:
-            if shutil.which(datos["executable"]) is not None:
-                disponibles.append(gestor)
-        else:
+    for gestor, datos in GESTORES.items():
+        if shutil.which(datos["executable"]) is None:
+            continue
+        if datos["existencia"] is not None:
             comando = [datos["executable"]] + datos["existencia"][1:]
-            comprobacion = subprocess.run(comando, capture_output=True)
-            if comprobacion.returncode == 0:
-                disponibles.append(gestor)
+            if subprocess.run(comando, capture_output=True).returncode != 0:
+                continue
+        disponibles.append(gestor)
     return disponibles
 
 
@@ -169,6 +176,15 @@ parser.add_argument(
     help="npm global packages",
     metavar="ID",
 )
+parser.add_argument(
+    "-r",
+    "--cargo",
+    dest="r",
+    nargs="*",
+    default=None,
+    help="Cargo packages",
+    metavar="ID",
+)
 parser.add_argument("-a", "--all", action="store_true", help="All managers")
 
 
@@ -189,6 +205,7 @@ def main():
         "pip": args.p,
         "choco": args.c,
         "npm": args.n,
+        "cargo": args.r,
     }
 
     if args.all:
@@ -208,6 +225,8 @@ def main():
                     ejecutar(gestor, nombres)
                 else:
                     print(f"{gestor} not found", file=sys.stderr)
+                    if "hint" in GESTORES[gestor]:
+                        print(f"  hint: {GESTORES[gestor]['hint']}", file=sys.stderr)
                     hubo_error = True
 
     if hubo_error == True:

@@ -20,6 +20,7 @@ UPD starts by showing you what's outdated by letting you choose in case you don'
 - Pip
 - Chocolatey (Untested)
 - Npm
+- Cargo (Needs cargo-update to work)
 
 ## Requirements
 
@@ -44,6 +45,7 @@ upd -a              Update all managers
 - `-p` | pip
 - `-c` | chocolatey
 - `-n` | npm
+- `-r` | cargo
 
 ## Known issues
 
