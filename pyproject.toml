@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -18,7 +18,7 @@ Repository = "https://github.com/AsIeR-17/UPD"
 Issues = "https://github.com/AsIeR-17/UPD/issues"
 
 [project.scripts]
-upd = "UPD:main"
+upd = "upd:main"
 
 [tool.setuptools]
-py-modules = ["UPD"]
+py-modules = ["upd"]
