@@ -55,7 +55,7 @@ GESTORES = {
         "hint": "cargo-update is required: cargo install cargo-update",
     },
 }
-# Queda testear CARGO, primero instalarlo y testear
+
 
 def disponibilidad():
     disponibles = []
