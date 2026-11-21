@@ -195,6 +195,17 @@ def main():
 
     disponibles = disponibilidad()
 
+    RESET = "\033[0m"
+    VERDE = "\033[32m"
+
+
+
+
+    def color(texto, codigo):
+        if not sys.stdout.isatty():
+            return texto
+        return f"{codigo}{texto}{RESET}"
+
     if not disponibles:
         print("No package managers were found", file=sys.stderr)
         sys.exit(1)
@@ -210,12 +221,16 @@ def main():
 
     if args.all:
         for gestor in disponibles:
-            print(f"===== {gestor.upper()} =====")
+            print(" ")
+            print(color(f"===== {gestor.upper()} =====", VERDE))
+            print(" ")
             ejecutar(gestor, [])
             print(" ")
     elif all(valor is None for valor in banderas.values()):
         for gestor in disponibles:
-            print(f"===== {gestor.upper()} =====")
+            print(" ")
+            print(color(f"===== {gestor.upper()} =====", VERDE))
+            print(" ")
             ejecutar(gestor, None)
             print(" ")
     else:
