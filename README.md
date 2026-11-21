@@ -29,7 +29,7 @@ UPD starts by showing you what's outdated by letting you choose in case you don'
 
 ## Instalación
 ```
-pip install git+https://github.com/AsIeR-17/UPD.git
+pipx install git+https://github.com/AsIeR-17/UPD.git
 ```
 ## Usage
 
