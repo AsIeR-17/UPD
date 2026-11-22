@@ -22,7 +22,8 @@ GESTORES = {
         "existencia": None,
     },
     "pip": {
-        "executable": shutil.which("python" if sys.platform == "win32" else "python3") or "python",
+        "executable": shutil.which("python" if sys.platform == "win32" else "python3")
+        or "python",
         "list": ["python", "-m", "pip", "list", "--outdated"],
         "update_all": None,
         "update_one": ["python", "-m", "pip", "install", "-U", "{name}"],
@@ -55,7 +56,17 @@ GESTORES = {
         "existencia": ["cargo", "install-update", "--version"],
         "hint": "cargo-update is required: cargo install cargo-update",
     },
+    "apt": {
+        "executable": "apt",
+        "list": ["apt", "list", "--upgradable"],
+        "update_all": [["apt", "update"], ["apt", "upgrade", "-y"]],
+        "update_one": ["apt", "install", "--only-upgrade", "-y", "{name}"],
+        "check_installed": None,
+        "existencia": None,
+        "sudo": True,
+    },
 }
+
 
 def construir(datos, comando, ruta):
     comando = [ruta] + comando[1:]
@@ -64,6 +75,7 @@ def construir(datos, comando, ruta):
     if os.geteuid() != 0:
         comando = ["sudo"] + comando
     return comando
+
 
 def disponibilidad():
     disponibles = []
@@ -193,6 +205,15 @@ parser.add_argument(
     help="Cargo packages",
     metavar="ID",
 )
+parser.add_argument(
+    "-t",
+    "--apt",
+    dest="apt",
+    nargs="*",
+    default=None,
+    help="apt packages",
+    metavar="ID",
+)
 parser.add_argument("-a", "--all", action="store_true", help="All managers")
 
 
@@ -222,19 +243,22 @@ def main():
         "choco": args.c,
         "npm": args.n,
         "cargo": args.r,
+        "apt": args.apt,
     }
+
+    barra = color("====", VERDE)
 
     if args.all:
         for gestor in disponibles:
             print(" ")
-            print(color(f"===== {gestor.upper()} =====", VERDE))
+            print(f"{barra} {gestor.upper()} {barra}")
             print(" ")
             ejecutar(gestor, [])
             print(" ")
     elif all(valor is None for valor in banderas.values()):
         for gestor in disponibles:
             print(" ")
-            print(color(f"===== {gestor.upper()} =====", VERDE))
+            print(f"{barra} {gestor.upper()} {barra}")
             print(" ")
             ejecutar(gestor, None)
             print(" ")

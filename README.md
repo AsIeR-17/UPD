@@ -21,10 +21,10 @@ UPD starts by showing you what's outdated by letting you choose in case you don'
 - Chocolatey (Untested)
 - Npm
 - Cargo (Needs cargo-update to work)
+- Apt (Untested)
 
 ## Requirements
 
-- Windows
 - Python 3.10 or greater
 
 ## Instalation
@@ -46,6 +46,7 @@ upd -a              Update all managers
 - `-c` | chocolatey
 - `-n` | npm
 - `-r` | cargo
+- `-t` | apt
 
 ## Known issues
 
@@ -54,7 +55,8 @@ upd -a              Update all managers
 ## Future
 
 - Working on adding much more managers 
-- Preparing for adding Linux and Mac compatability
+- Preparing for adding Mac compatability
+- Testing on Linux
 
 ## License
 
