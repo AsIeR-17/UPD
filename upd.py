@@ -2,6 +2,7 @@ import argparse
 import subprocess
 import shutil
 import sys
+import os
 
 GESTORES = {
     "winget": {
@@ -21,7 +22,7 @@ GESTORES = {
         "existencia": None,
     },
     "pip": {
-        "executable": sys.executable,
+        "executable": shutil.which("python" if sys.platform == "win32" else "python3") or "python",
         "list": ["python", "-m", "pip", "list", "--outdated"],
         "update_all": None,
         "update_one": ["python", "-m", "pip", "install", "-U", "{name}"],
@@ -56,6 +57,13 @@ GESTORES = {
     },
 }
 
+def construir(datos, comando, ruta):
+    comando = [ruta] + comando[1:]
+    if not datos.get("sudo") or sys.platform == "win32":
+        return comando
+    if os.geteuid() != 0:
+        comando = ["sudo"] + comando
+    return comando
 
 def disponibilidad():
     disponibles = []
@@ -101,18 +109,18 @@ def ejecutar(gestor, nombres):
             print(f"{gestor} has no update all")
         else:
             for comando in datos["update_all"]:
-                subprocess.run([ruta] + comando[1:])
+                subprocess.run(construir(datos, comando, ruta))
     else:
         for nombre in nombres:
             if datos["check_installed"] is None:
                 comando = sustituir(datos["update_one"], nombre)
-                subprocess.run([ruta] + comando[1:])
+                subprocess.run(construir(datos, comando, ruta))
             else:
                 comando = sustituir(datos["check_installed"], nombre)
                 comprobacion = subprocess.run([ruta] + comando[1:], capture_output=True)
                 if comprobacion.returncode == 0:
                     comando = sustituir(datos["update_one"], nombre)
-                    subprocess.run([ruta] + comando[1:])
+                    subprocess.run(construir(datos, comando, ruta))
                 else:
                     print(f"{nombre} is not installed")
 
@@ -197,9 +205,6 @@ def main():
 
     RESET = "\033[0m"
     VERDE = "\033[32m"
-
-
-
 
     def color(texto, codigo):
         if not sys.stdout.isatty():
