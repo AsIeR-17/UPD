@@ -1,8 +1,8 @@
 import argparse
-import subprocess
-import shutil
-import sys
 import os
+import shutil
+import subprocess
+import sys
 
 GESTORES = {
     "winget": {
