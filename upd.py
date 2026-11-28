@@ -20,6 +20,7 @@ GESTORES = {
         "update_one": ["scoop", "update", "{name}"],
         "check_installed": None,
         "existencia": None,
+        "cleaning": [["scoop", "cleanup", "*"], ["scoop", "cache", "rm", "*"]],
     },
     "pip": {
         "executable": shutil.which("python" if sys.platform == "win32" else "python3")
@@ -29,6 +30,7 @@ GESTORES = {
         "update_one": ["python", "-m", "pip", "install", "-U", "{name}"],
         "check_installed": ["python", "-m", "pip", "show", "{name}"],
         "existencia": ["python", "-m", "pip", "--version"],
+        "cleaning": [["python", "-m", "pip", "cache", "purge"]],
     },
     "choco": {
         "executable": "choco",
@@ -46,6 +48,7 @@ GESTORES = {
         "check_installed": None,
         "existencia": None,
         "ok_codes": [0, 1],
+        "cleaning": [["npm", "cache", "verify"]],
     },
     "cargo": {
         "executable": "cargo",
@@ -64,6 +67,7 @@ GESTORES = {
         "check_installed": None,
         "existencia": None,
         "sudo": True,
+        "cleaning": [["apt", "autoremove"], ["apt", "clean"]],
     },
 }
 
@@ -75,6 +79,17 @@ def construir(datos, comando, ruta):
     if os.geteuid() != 0:
         comando = ["sudo"] + comando
     return comando
+
+
+def limpiar(gestor):
+    datos = GESTORES[gestor]
+    comandos = datos.get("cleaning")
+    if comandos is None:
+        print(f"{gestor} has no cleaning command")
+        return
+    ruta = shutil.which(datos["executable"])
+    for comando in comandos:
+        subprocess.run(construir(datos, comando, ruta))
 
 
 def disponibilidad():
@@ -216,6 +231,10 @@ parser.add_argument(
 )
 parser.add_argument("-a", "--all", action="store_true", help="All managers")
 
+parser.add_argument(
+    "-l", "--clean", action="store_true", help="Clean caches and leftovers"
+)
+
 
 def main():
     args = parser.parse_args()
@@ -248,7 +267,14 @@ def main():
 
     barra = color("====", VERDE)
 
-    if args.all:
+    if args.clean:
+        for gestor in disponibles:
+            print(" ")
+            print(f"{barra} {gestor.upper()} {barra}")
+            print(" ")
+            limpiar(gestor)
+            print(" ")
+    elif args.all:
         for gestor in disponibles:
             print(" ")
             print(f"{barra} {gestor.upper()} {barra}")
